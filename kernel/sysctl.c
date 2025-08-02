@@ -1580,6 +1580,10 @@ int proc_do_static_key(const struct ctl_table *table, int write,
 	return ret;
 }
 
+#ifdef CONFIG_FB_CON_DECOR
+extern char fbcon_decor_path[];
+#endif
+
 static const struct ctl_table kern_table[] = {
 #ifdef CONFIG_PROC_SYSCTL
 	{
@@ -1758,6 +1762,15 @@ static const struct ctl_table kern_table[] = {
 		.extra2		= SYSCTL_INT_MAX,
 	},
 #endif
+#ifdef CONFIG_FB_CON_DECOR
+	{
+		.procname	= "fbcondecor",
+		.data		= &fbcon_decor_path,
+		.maxlen		= KMOD_PATH_LEN,
+		.mode		= 0644,
+		.proc_handler	= &proc_dostring,
+	},
+#endif
 };
 
 int __init sysctl_init_bases(void)
@@ -1766,6 +1779,7 @@ int __init sysctl_init_bases(void)
 
 	return 0;
 }
+
 #endif /* CONFIG_SYSCTL */
 /*
  * No sense putting this after each symbol definition, twice,
